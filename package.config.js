@@ -14,7 +14,7 @@ const config = {
 };
 // ====== That's it. Do not touch below this line ======
 // To apply your config, run:
-// $ node ./package.config.js
+// $ node package.config.js
 
 // package.json template
 const pkg = {
@@ -43,19 +43,30 @@ const pkg = {
     "clean":          `rm -f '${config.main}' '${config.main}.map' && find . -name '.DS_Store' -not -path '*/node_modules/*' | xargs rm -r`,
     "build":          "rollup -c"
   },
-  repository: {
-    type: "git"
-  },
+  repository: null,
+  bugs:       null,
+  homepage:   null,
   keywords: config.keywords,
   author:   config.author,
   license:  config.license,
   private:  config.private
 };
 
-if (config.bitbucket_user)   pkg.repository.url = "git+ssh://git@bitbucket.org/{bitbucket_user}/{name}.git";
-else if (config.github_user) pkg.repository.url = "git+ssh://git@github.com/{github_user}/{name}.git";
-else                         pkg.repository.url = "git+ssh://git@github.com/{YOU}/{name}.git";
-if (!pkg.license) pkg.license = "UNLICENSED";
+let baseUrl;
+if (config.bitbucket_user)   baseUrl = 'bitbucket.org/{bitbucket_user}/{name}';
+else if (config.github_user) baseUrl = 'github.com/{github_user}/{name}';
+if (baseUrl) {
+  pkg.repository = { type: 'git', url: `git+ssh://git@${baseUrl}.git` };
+  pkg.bugs       = `https://${baseUrl}/issues`;
+  pkg.homepage   = `https://${baseUrl}#readme`;
+}
+
+if (!pkg.license) pkg.license = 'UNLICENSED';
+
+// remove null properties
+for (let i in pkg) {
+  if (pkg[i] === null) delete pkg[i];
+}
 
 // fetch current package.json if it exists
 let current;

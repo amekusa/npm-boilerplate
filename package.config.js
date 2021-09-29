@@ -1,5 +1,5 @@
 // ------ Edit the config as you like ------------------
-const config = {
+const conf = {
   name:           "my-package",
   version:        "0.1.0",
   description:    "",
@@ -16,45 +16,45 @@ const config = {
 // To apply your config, run:
 // $ node package.config.js
 
-// package.json template
+// package.json
 const pkg = {
-  name:        config.name,
-  version:     config.version,
-  description: config.description,
-  main:        config.main,
+  name:        conf.name,
+  version:     conf.version,
+  description: conf.description,
+  main:        conf.main,
   files: [
-    "src",
-    config.main,
-    config.main + ".map"
+    'src',
+    conf.main,
+    conf.main + '.map'
   ],
   exports: {
-    "import":  "./" + config.es6_main,
-    "require": "./" + config.main
+    import:  './' + conf.es6_main,
+    require: './' + conf.main
   },
   scripts: {
-    "prepublishOnly": "npm run clean && npm run build && npm run test",
-    "watch":          "npm-watch",
-    "test":           "c8 mocha --enable-source-maps",
-    "codecov":        "c8 report --reporter=text-lcov > coverage.lcov && codecov",
-    "docs":           "npm run docs:gen && npm run docs:publish",
-    "docs:gen":       "npm run docs:clean && jsdoc -c jsdoc.json && cd docs/{name} && ln -sfn $npm_package_version latest",
-    "docs:clean":     "rm -rf docs/{name}/$npm_package_version",
-    "docs:publish":   "git subtree push --prefix docs/{name} origin gh-pages",
-    "clean":          `rm -f '${config.main}' '${config.main}.map' && find . -name '.DS_Store' -not -path '*/node_modules/*' | xargs rm -r`,
-    "build":          "rollup -c"
+    prepublishOnly: `npm run clean && npm run build && npm run test`,
+    watch:          `npm-watch`,
+    test:           `c8 mocha --enable-source-maps`,
+    codecov:        `c8 report --reporter=text-lcov > coverage.lcov && codecov`,
+    docs:           `npm run docs:gen && npm run docs:publish`,
+    'docs:gen':     `npm run docs:clean && jsdoc -c jsdoc.json && cd docs/${conf.name} && ln -sfn $npm_package_version latest`,
+    'docs:clean':   `rm -rf docs/${conf.name}/$npm_package_version`,
+    'docs:publish': `git subtree push --prefix docs/${conf.name} origin gh-pages`,
+    clean:          `rm -f '${conf.main}' '${conf.main}.map' && find . -name '.DS_Store' -not -path '*/node_modules/*' | xargs rm -r`,
+    build:          `rollup -c`
   },
   repository: null,
   bugs:       null,
   homepage:   null,
-  keywords: config.keywords,
-  author:   config.author,
-  license:  config.license,
-  private:  config.private
+  keywords: conf.keywords,
+  author:   conf.author,
+  license:  conf.license,
+  private:  conf.private
 };
 
 let baseUrl;
-if (config.bitbucket_user)   baseUrl = 'bitbucket.org/{bitbucket_user}/{name}';
-else if (config.github_user) baseUrl = 'github.com/{github_user}/{name}';
+if (conf.bitbucket_user)   baseUrl = `bitbucket.org/${conf.bitbucket_user}/${conf.name}`;
+else if (conf.github_user) baseUrl = `github.com/${conf.github_user}/${conf.name}`;
 if (baseUrl) {
   pkg.repository = { type: 'git', url: `git+ssh://git@${baseUrl}.git` };
   pkg.bugs       = `https://${baseUrl}/issues`;
@@ -76,9 +76,8 @@ try {
   current = {};
 }
 
-// apply config
+// merge
 let r = JSON.stringify(Object.assign(current, pkg), null, 2);
-for (let i in config) r = r.replaceAll(`{${i}}`, config[i]);
 
 // save to package.json
 const fs = require('fs');

@@ -16,15 +16,7 @@ const config = {
 // To apply your config, run:
 // $ node ./package.config.js
 
-const fs = require('fs');
-
-let current;
-try {
-  current = require('./package.json');
-} catch (e) {
-  current = {};
-}
-
+// package.json template
 const pkg = {
   name:        config.name,
   version:     config.version,
@@ -65,11 +57,20 @@ else if (config.github_user) pkg.repository.url = "git+ssh://git@github.com/{git
 else                         pkg.repository.url = "git+ssh://git@github.com/{YOU}/{name}.git";
 if (!pkg.license) pkg.license = "UNLICENSED";
 
+// fetch current package.json if it exists
+let current;
+try {
+  current = require('./package.json');
+} catch (e) {
+  current = {};
+}
+
 // apply config
 let r = JSON.stringify(Object.assign(current, pkg), null, 2);
 for (let i in config) r = r.replaceAll(`{${i}}`, config[i]);
 
 // save to package.json
+const fs = require('fs');
 fs.open('./package.json', 'w', (err, fd) => {
   if (err) {
     console.error(`failed to open package.json`);

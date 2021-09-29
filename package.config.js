@@ -60,10 +60,10 @@ const pkg = {
   private:  config.private
 };
 
-if (config.bitbucket)   pkg.repository.url = "git+ssh://git@bitbucket.org/{bitbucket_user}/{name}.git";
-else if (config.github) pkg.repository.url = "git+ssh://git@github.com/{github_user}/{name}.git";
-else                    pkg.repository.url = "git+ssh://git@github.com/{YOU}/{name}.git";
-if (!pkg.license)       pkg.license = "UNLICENSED";
+if (config.bitbucket_user)   pkg.repository.url = "git+ssh://git@bitbucket.org/{bitbucket_user}/{name}.git";
+else if (config.github_user) pkg.repository.url = "git+ssh://git@github.com/{github_user}/{name}.git";
+else                         pkg.repository.url = "git+ssh://git@github.com/{YOU}/{name}.git";
+if (!pkg.license) pkg.license = "UNLICENSED";
 
 // apply config
 let r = JSON.stringify(Object.assign(current, pkg), null, 2);
